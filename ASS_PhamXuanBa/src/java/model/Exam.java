@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -56,6 +57,10 @@ public class Exam {
 
     public void setGrades(ArrayList<Grade> grades) {
         this.grades = grades;
+    }
+
+    public void setFrom(Timestamp timestamp) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }

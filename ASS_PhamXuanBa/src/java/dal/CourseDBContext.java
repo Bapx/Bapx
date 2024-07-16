@@ -96,9 +96,9 @@ public class CourseDBContext extends DBContext<Course> {
         
        
        ArrayList<Course> list = d.filterByLecturerID(1);
-       for(Course a : list){
-            System.out.println(a.getSubject().getName());
-       }
+       
+            System.out.println(Double.parseDouble("8.9"));
+       
         
     }
 }

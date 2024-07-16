@@ -5,6 +5,10 @@
 
 package controller;
 
+import dal.CourseDBContext;
+import dal.LecturerDBContext;
+import dal.SemesterDBContext;
+import dal.UserDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,12 +16,18 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import model.Course;
+import model.Exam;
+import model.Semester;
+import model.User;
+
 
 /**
  *
  * @author bapxh
  */
-@WebServlet(name="Login", urlPatterns={"/Login"})
+@WebServlet(name="Login", urlPatterns={"/login"})
 public class Login extends HttpServlet {
    
     /** 
@@ -68,7 +78,26 @@ public class Login extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        String username= request.getParameter("username");
+        String password = request.getParameter("pass");
+        UserDBContext userContext = new UserDBContext();
+        User user = userContext.getUser(username, password);
+        if(user!=null){
+            
+            CourseDBContext db = new CourseDBContext();
+            LecturerDBContext lectureDBContext = new LecturerDBContext();
+            SemesterDBContext semesterDBContext = new SemesterDBContext();
+            int lid = lectureDBContext.getLectureIdByUserName(username);
+            ArrayList<Course> listcourse= db.filterByLecturerID(lid);
+            ArrayList<Semester> listSemester =semesterDBContext.getSemesterByLectureId(lid); 
+            request.setAttribute("displayName", user.getDisplayName());
+            request.setAttribute("listcourse", listcourse);
+            request.setAttribute("semesterList",listSemester );
+            request.getRequestDispatcher("home-lecture.jsp").forward(request, response);
+        }else {
+            request.setAttribute("mess", "account invalid");  
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        }
     }
 
     /** 
